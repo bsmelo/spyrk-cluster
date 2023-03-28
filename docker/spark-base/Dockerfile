@@ -1,4 +1,4 @@
-FROM openjdk:8-jdk-slim
+FROM adoptopenjdk/openjdk11:jdk-11.0.11_9-slim
 
 # Variaveis de ambiente do Hadoop
 ENV HADOOP_VERSION 3.3.4
