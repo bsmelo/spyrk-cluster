@@ -6,6 +6,23 @@ ENV HADOOP_MINOR_VERSION 3.3
 ENV HADOOP_HOME /usr/hadoop-$HADOOP_VERSION
 ENV HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop
 
+# Variaveis da aula
+# Roteiro 1
+ENV HADOOP_COMMON_HOME=${HADOOP_HOME}
+ENV HADOOP_HDFS_HOME=${HADOOP_HOME}
+ENV HADOOP_MAPRED_HOME=${HADOOP_HOME}
+ENV HADOOP_YARN_HOME=${HADOOP_HOME}
+ENV HADOOP_COMMON_LIB_NATIVE_DIR=${HADOOP_HOME}/lib/native
+# Avaliar necessidade de OPTS adicionais da página de "Upgrading" do Spark
+ENV HADOOP_OPTS="$HADOOP_OPTS -XX:-PrintWarnings -Djava.library.path=${HADOOP_COMMON_LIB_NATIVE_DIR}"
+ENV LD_LIBRARY_PATH=${HADOOP_COMMON_LIB_NATIVE_DIR}
+#export HDFS_NAMENODE_USER="spark"
+#export HDFS_DATANODE_USER="${HDFS_NAMENODE_USER}"
+#export HDFS_SECONDARYNAMENODE_USER="${HDFS_NAMENODE_USER}"
+#export YARN_RESOURCEMANAGER_USER="${HDFS_NAMENODE_USER}"
+#export YARN_NODEMANAGER_USER="${HDFS_NAMENODE_USER}"
+ENV PATH=$PATH:$HADOOP_HOME/sbin:$HADOOP_HOME/bin:$JAVA_HOME/bin
+
 # Variaveis de ambiente do Hive
 ENV HIVE_VERSION 3.1.3
 ENV HIVE_HOME=/usr/hive
@@ -46,7 +63,7 @@ ENV PYSPARK_DRIVER_PYTHON=python3
 
 # Adicao de valores aos paths abaixo para que os componentes os localizem
 ENV PYTHONPATH $SPARK_HOME/python:$SPARK_HOME/python/lib/py4j-$PY4J_VERSION-src.zip:/usr/bin/python3
-ENV PATH $PATH:$JAVA_HOME/bin:$HADOOP_HOME/bin:$SPARK_HOME/bin:$SPARK_HOME/python:$SPARK_HOME/python/lib/py4j-$PY4J_VERSION-src.zip:$PYTHONPATH:$HIVE_HOME/bin:$KAFKA_HOME/bin:$SCALA_HOME/bin
+ENV PATH $PATH:$HADOOP_HOME/sbin:$HADOOP_HOME/bin::$JAVA_HOME/bin:$SPARK_HOME/bin:$SPARK_HOME/python:$SPARK_HOME/python/lib/py4j-$PY4J_VERSION-src.zip:$PYTHONPATH:$HIVE_HOME/bin:$KAFKA_HOME/bin:$SCALA_HOME/bin
 
 COPY /config/jupyter/requirements.txt /
 
@@ -66,7 +83,7 @@ RUN apt-get update \
     "http://archive.apache.org/dist/hadoop/common/hadoop-${HADOOP_VERSION}/hadoop-${HADOOP_VERSION}.tar.gz" \
     && tar zvxf hadoop-${HADOOP_VERSION}.tar.gz -C /usr/ \
     && rm hadoop-${HADOOP_VERSION}.tar.gz \
-    && rm -rf ${HADOOP_HOME}/share/doc \
+    #&& rm -rf ${HADOOP_HOME}/share/doc \
     && chown -R root:root ${HADOOP_HOME} \
     # Spark
     && wget \
