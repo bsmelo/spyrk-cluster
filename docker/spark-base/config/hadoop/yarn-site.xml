@@ -33,6 +33,19 @@
                 <name>yarn.nodemanager.vmem-check-enabled</name>
                 <value>false</value>
         </property>
+        <!-- Roteiro 2: -->
+        <!-- property>
+                <name>yarn.nodemanager.aux-services.mapreduce.shuffle.class</name>
+                <value>org.apache.hadoop.mapred.ShuffleHandler</value>
+        </property>
+        <property>
+                <name>yarn.scheduler.capacity.maximum-am-resource-percent</name>
+                <value>0.95</value>
+        </property>
+        <property>
+                <name>yarn.application.classpath</name>
+                <value>$HADOOP_CONF_DIR,$HADOOP_COMMON_HOME/share/hadoop/common/*,$HADOOP_COMMON_HOME/share/hadoop/common/lib/*,$HADOOP_HDFS_HOME/share/hadoop/hdfs/*,$HADOOP_HDFS_HOME/share/hadoop/hdfs/lib/*,$HADOOP_CONF_DIR/*,$HADOOP_YARN_HOME/share/hadoop/yarn/*,$HADOOP_YARN_HOME/share/hadoop/yarn/lib/*</value>
+        </property -->
         <property>
                 <name>yarn.nodemanager.disk-health-checker.max-disk-utilization-per-disk-percentage</name>
                 <value>99.0</value>
