@@ -4,7 +4,7 @@ import findspark
 from pyspark.sql.session import SparkSession
 
 # Inicializando Spark
-findspark.init("/usr/spark-2.4.6/")
+findspark.init("/usr/spark-3.3.2/")
 
 spark = (
     SparkSession.builder.appName("sparksubmit_test_app")
