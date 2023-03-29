@@ -67,33 +67,35 @@ ENV PATH $PATH:$HADOOP_HOME/sbin:$HADOOP_HOME/bin::$JAVA_HOME/bin:$SPARK_HOME/bi
 
 COPY /config/jupyter/requirements.txt /
 
-# Ajustes e instalação dos componentes do cluster
+# Ajustes e instalação dos componentes do cluster, em várias camadas para favorecer o reúso pelo Docker
+# OS Utils
 RUN apt-get update \
     && apt-get install -y wget vim ssh openssh-server curl iputils-ping \
     python3 python3-pip python3-dev \
-    build-essential libssl-dev libffi-dev libpq-dev mariadb-server libmariadb-java \
-    && python3 -m pip install -r requirements.txt \
-    && python3 -m pip install dask[bag] --upgrade \
+    build-essential libssl-dev libffi-dev libpq-dev mariadb-server libmariadb-java
+# Jupyter (1)
+RUN python3 -m pip install -r requirements.txt
+# Jupyter (2)
+RUN python3 -m pip install dask[bag] --upgrade \
     && python3 -m pip install --upgrade toree \
     && python3 -m bash_kernel.install \
-    && python3 -c "import nltk; nltk.download('stopwords')"\
-    && mkdir datasets \
-    # Hadoop
-    && wget \
+    && python3 -c "import nltk; nltk.download('stopwords')"
+# Hadoop
+RUN wget \
     "http://archive.apache.org/dist/hadoop/common/hadoop-${HADOOP_VERSION}/hadoop-${HADOOP_VERSION}.tar.gz" \
     && tar zvxf hadoop-${HADOOP_VERSION}.tar.gz -C /usr/ \
     && rm hadoop-${HADOOP_VERSION}.tar.gz \
     #&& rm -rf ${HADOOP_HOME}/share/doc \
-    && chown -R root:root ${HADOOP_HOME} \
-    # Spark
-    && wget \
+    && chown -R root:root ${HADOOP_HOME}
+# Spark
+RUN wget \
     "http://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_MINOR_VERSION}.tgz" \
     && mkdir ${SPARK_HOME} \
     && tar zvxf spark-${SPARK_VERSION}-bin-hadoop${HADOOP_MINOR_VERSION}.tgz -C ${SPARK_HOME} \
     && rm spark-${SPARK_VERSION}-bin-hadoop${HADOOP_MINOR_VERSION}.tgz \
-    && chown -R root:root ${SPARK_HOME} \
-    # Hive
-    && wget \
+    && chown -R root:root ${SPARK_HOME}
+# Hive
+RUN wget \
     https://archive.apache.org/dist/hive/hive-${HIVE_VERSION}/apache-hive-${HIVE_VERSION}-bin.tar.gz \
     && tar zxvf apache-hive-${HIVE_VERSION}-bin.tar.gz \
     && rm apache-hive-${HIVE_VERSION}-bin.tar.gz \
@@ -103,22 +105,22 @@ RUN apt-get update \
     # Configurando o conector do metastore do Hive
     && ln -s /usr/share/java/mariadb-java-client.jar ${HIVE_HOME}/lib/mariadb-java-client.jar \
     # Criando diretório para jars externos do Hive e baixando suporte a parquet
-    && wget https://repo1.maven.org/maven2/com/twitter/parquet-avro/1.2.5/parquet-avro-1.2.5.jar -P /usr/hive/aux_jars/ \
-    # Zookeeper
-    && wget \
+    && wget https://repo1.maven.org/maven2/com/twitter/parquet-avro/1.2.5/parquet-avro-1.2.5.jar -P /usr/hive/aux_jars/
+# Zookeeper
+RUN wget \
     https://archive.apache.org/dist/zookeeper/zookeeper-${ZOOKEEPER_VERSION}/apache-zookeeper-${ZOOKEEPER_VERSION}-bin.tar.gz\
     && tar -zvxf apache-zookeeper-${ZOOKEEPER_VERSION}-bin.tar.gz \
     && rm apache-zookeeper-${ZOOKEEPER_VERSION}-bin.tar.gz \
     && mv apache-zookeeper-${ZOOKEEPER_VERSION}-bin /usr/apache-zookeeper-${ZOOKEEPER_VERSION}-bin \
-    && mkdir /var/lib/zookeeper \
-    # Scala
-    && wget \
+    && mkdir /var/lib/zookeeper
+# Scala
+RUN wget \
     https://downloads.lightbend.com/scala/${SCALA_VERSION}/scala-${SCALA_VERSION}.tgz \
     && tar -zvxf scala-${SCALA_VERSION}.tgz \
     && rm scala-${SCALA_VERSION}.tgz \
-    && mv /scala-${SCALA_VERSION} /usr/scala \
-    # Kafka
-    && wget \
+    && mv /scala-${SCALA_VERSION} /usr/scala
+# Kafka
+RUN wget \
     https://archive.apache.org/dist/kafka/${KAFKA_VERSION}/kafka_${SCALA_KAFKA_VERSION}.tgz \
     && tar -zvxf kafka_${SCALA_KAFKA_VERSION}.tgz \
     && rm kafka_${SCALA_KAFKA_VERSION}.tgz \
@@ -132,6 +134,9 @@ RUN ssh-keygen -t rsa -P '' -f ~/.ssh/id_rsa && \
     chmod 600 ~/.ssh/authorized_keys
 COPY /config/config /root/.ssh
 RUN chmod 600 /root/.ssh/config
+
+# Criação do diretório mapeado como docker volume
+RUN mkdir datasets
 
 # Todos os arquivos de configuracao que devem ser copiados para dentro do
 # container estao aqui
