@@ -2,7 +2,6 @@ FROM adoptopenjdk/openjdk11:jdk-11.0.11_9-slim
 
 # Variaveis de ambiente do Hadoop
 ENV HADOOP_VERSION 3.3.4
-ENV HADOOP_MINOR_VERSION 3.3
 ENV HADOOP_HOME /usr/hadoop-$HADOOP_VERSION
 ENV HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop
 
@@ -89,10 +88,10 @@ RUN wget \
     && chown -R root:root ${HADOOP_HOME}
 # Spark
 RUN wget \
-    "http://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_MINOR_VERSION}.tgz" \
+    "http://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-without-hadoop.tgz" \
     && mkdir ${SPARK_HOME} \
-    && tar zvxf spark-${SPARK_VERSION}-bin-hadoop${HADOOP_MINOR_VERSION}.tgz -C ${SPARK_HOME} \
-    && rm spark-${SPARK_VERSION}-bin-hadoop${HADOOP_MINOR_VERSION}.tgz \
+    && tar zvxf spark-${SPARK_VERSION}-bin-without-hadoop.tgz -C ${SPARK_HOME} \
+    && rm spark-${SPARK_VERSION}-bin-without-hadoop.tgz \
     && chown -R root:root ${SPARK_HOME}
 # Hive
 RUN wget \
