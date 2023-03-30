@@ -29,20 +29,20 @@ if [[ $HOSTNAME = spark-master ]]; then
     # Configs de Zookeeper
     touch /var/lib/zookeeper/myid
     echo "1" >> /var/lib/zookeeper/myid
-    ./usr/apache-zookeeper-${ZOOKEEPER_VERSION}-bin/bin/zkServer.sh start
+    $ZOOKEEPER_HOME/bin/zkServer.sh start
 
     # Configs de Kafka
-    # Adiciona quebra de linha ao fim do arquivp
-    sed -i 's/$/\n/' /usr/kafka/config/server.properties
+    # Adiciona quebra de linha ao fim do arquivo
+    sed -i 's/$/\n/' $KAFKA_HOME/config/server.properties
 
     # Adiciona o id do Broker. O Master será o número 0.
-    echo "broker.id=0" >> /usr/kafka/config/server.properties
+    echo "broker.id=0" >> $KAFKA_HOME/config/server.properties
 
     # Configs de Hive, configurando o metastore, definindo senha, etc...
-    mysql -u $HDFS_NAMENODE_USER -Bse \
+    mysql -u $GLOBAL_USER -Bse \
     "CREATE DATABASE metastore; \
     USE metastore; \
-    SOURCE /usr/hive/scripts/metastore/upgrade/mysql/hive-schema-3.1.0.mysql.sql; \
+    SOURCE $HIVE_HOME/scripts/metastore/upgrade/mysql/hive-schema-3.1.0.mysql.sql; \
     CREATE USER 'hive'@'localhost' IDENTIFIED BY 'password'; \
     REVOKE ALL PRIVILEGES, GRANT OPTION FROM 'hive'@'localhost'; \
     GRANT ALL PRIVILEGES ON metastore.* TO 'hive'@'localhost' IDENTIFIED BY 'password'; \
@@ -58,7 +58,7 @@ if [[ $HOSTNAME = spark-master ]]; then
 
     # Iniciando o Kafka
     cd /
-    ./usr/kafka/bin/kafka-server-start.sh ./usr/kafka/config/server.properties &
+    $KAFKA_HOME/bin/kafka-server-start.sh $KAFKA_HOME/config/server.properties &
 
     # Inicio dos serviços do Hive. Nao recomendado: Redirecionamos
     # os outputs para uma localização inexistente para que as linhas
@@ -73,18 +73,18 @@ else
     echo "$((${HOSTNAME: -1}+1))" >> /var/lib/zookeeper/myid
 
     # Configs de Kafka. Vamos numerando os brokers.
-    sed -i 's/$/\n/' /usr/kafka/config/server.properties
-    echo "broker.id=$((${HOSTNAME: -1}+1))" >> /usr/kafka/config/server.properties
+    sed -i 's/$/\n/' $KAFKA_HOME/config/server.properties
+    echo "broker.id=$((${HOSTNAME: -1}+1))" >> $KAFKA_HOME/config/server.properties
 
     # Configs de HDFS nos dataNodes (workers)
     $HADOOP_HOME/sbin/hadoop-daemon.sh start datanode &
     $HADOOP_HOME/bin/yarn nodemanager &
     
     # Inicio do serviço do Zookeeper
-    ./usr/apache-zookeeper-${ZOOKEEPER_VERSION}-bin/bin/zkServer.sh start &
+    $ZOOKEEPER_HOME/bin/zkServer.sh start &
 
     # Início do Kafka
-    ./usr/kafka/bin/kafka-server-start.sh ./usr/kafka/config/server.properties
+    $KAFKA_HOME/bin/kafka-server-start.sh $KAFKA_HOME/config/server.properties
 
 fi
 

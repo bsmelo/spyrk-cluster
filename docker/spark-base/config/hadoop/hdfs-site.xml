@@ -3,11 +3,11 @@
 <configuration>
     <property>
             <name>dfs.namenode.name.dir</name>
-            <value>/usr/hadoop-3.3.4/data/nameNode</value>
+            <value>/usr/hadoop/data/nameNode</value>
     </property>
     <property>
             <name>dfs.datanode.data.dir</name>
-            <value>/usr/hadoop-3.3.4/data/dataNode</value>
+            <value>/usr/hadoop/data/dataNode</value>
     </property>
     <property>
             <name>dfs.replication</name>

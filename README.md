@@ -129,11 +129,11 @@ Path: `/docker/spark-base/config/hadoop/hdfs-site.xml`
     <configuration>
         <property>
                 <name>dfs.namenode.name.dir</name>
-                <value>/usr/hadoop-3.3.4/data/nameNode</value>
+                <value>/usr/hadoop/data/nameNode</value>
         </property>
         <property>
                 <name>dfs.datanode.data.dir</name>
-                <value>/usr/hadoop-3.3.4/data/dataNode</value>
+                <value>/usr/hadoop/data/dataNode</value>
         </property>
         <property>
                 <name>dfs.replication</name>
@@ -141,7 +141,7 @@ Path: `/docker/spark-base/config/hadoop/hdfs-site.xml`
         </property>
     </configuration>
 
-Aqui definimos algumas propriedades do HDFS, como onde estarão informações relativas ao Namenode ou ao Datanode. Importante notar que o path `/usr/hadoop-3.3.4/` é o mesmo path definido como `HADOOP_HOME` no topo do arquivo `/docker/spark-base/Dockerfile`.
+Aqui definimos algumas propriedades do HDFS, como onde estarão informações relativas ao Namenode ou ao Datanode. Importante notar que o path `/usr/hadoop/` é o mesmo path definido como `HADOOP_HOME` no topo do arquivo `/docker/spark-base/Dockerfile`.
 
 Também se define `dfs.replication` como a quantidade de workers. Note, que caso queira mudar a quantidade de workers no `docker-compose.yml`, você também deverá mudar este parâmetro aqui.
 
@@ -424,7 +424,6 @@ Ao se finalizar, faça `docker-compose down` para parar e excluir todos os conta
 _On roadmap:_
 - _Disponilizar Kafka (DONE!)_
 - Ajustar user (não usar root)
-- Padronizar parametrização (repassar ENV VARS)
 - Disponibilizar Hbase
 - Disponibilizar Sqoop
 - Disponibilizar Mahout

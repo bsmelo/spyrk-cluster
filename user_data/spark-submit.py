@@ -4,7 +4,7 @@ import findspark
 from pyspark.sql.session import SparkSession
 
 # Inicializando Spark
-findspark.init("/usr/spark-3.3.2/")
+findspark.init("/usr/spark/")
 
 spark = (
     SparkSession.builder.appName("sparksubmit_test_app")
@@ -16,7 +16,7 @@ spark = (
 
 def main():
 
-    df = spark.read.text("hdfs://spark-master:9000/datasets/")  # noqa: F841
+    df = spark.read.text("hdfs://spark-master:9000/user/root/datasets/")  # noqa: F841
 
     # ToDo - Implemente o que tem que fazer
 
