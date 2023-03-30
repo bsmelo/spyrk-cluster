@@ -89,9 +89,9 @@ RUN wget \
 # Spark
 RUN wget \
     "http://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-without-hadoop.tgz" \
-    && mkdir ${SPARK_HOME} \
-    && tar zvxf spark-${SPARK_VERSION}-bin-without-hadoop.tgz -C ${SPARK_HOME} \
+    && tar zvxf spark-${SPARK_VERSION}-bin-without-hadoop.tgz \
     && rm spark-${SPARK_VERSION}-bin-without-hadoop.tgz \
+    && mv spark-${SPARK_VERSION}-bin-without-hadoop ${SPARK_HOME} \
     && chown -R root:root ${SPARK_HOME}
 # Hive
 RUN wget \
