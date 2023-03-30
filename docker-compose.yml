@@ -19,6 +19,7 @@ services:
       - "11001:10001" # HiveServer - HTTP Mode
       - "11002:10002" # Hiveserver WebUI
       - "9092:9092" # Kafka
+      - "18080:18080" # Spark History UI
     networks: 
       spark-network:
         ipv4_address: 10.5.0.2
@@ -34,6 +35,7 @@ services:
     ports:
       - "8081:8081" # WebUI Spark worker
       - "6042:8042" # NodeManager
+      - "18081:18080" # Spark History UI
     environment:
       - "SPARK_LOCAL_IP=spark-worker-1"
     networks: 
@@ -49,6 +51,7 @@ services:
     ports:
       - "8082:8081" # WebUI Spark worker
       - "7042:8042" # NodeManager
+      - "18082:18082" # Spark History UI
     environment:
       - "SPARK_LOCAL_IP=spark-worker-2"
     networks: 

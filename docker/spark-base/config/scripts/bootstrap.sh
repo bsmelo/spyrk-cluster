@@ -23,8 +23,8 @@ if [[ $HOSTNAME = spark-master ]]; then
     hdfs dfs -mkdir -p /user/$HDFS_NAMENODE_USER/datasets_processed
 
     # Roteiro 4
-    # hdfs dfs -mkdir -p /spark-logs
-    # start-history-server.sh
+    hdfs dfs -mkdir -p /user/$HDFS_NAMENODE_USER/spark-logs
+    start-history-server.sh
 
     # Configs de Zookeeper
     touch /var/lib/zookeeper/myid

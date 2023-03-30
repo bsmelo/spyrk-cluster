@@ -2,7 +2,7 @@ FROM gbieul/spark-base-hadoop:3.3.2
 
 ENV SPARK_WORKER_WEBUI_PORT 8081
 ENV SPARK_MASTER "spark://spark-master:7077"
-ENV SPARK_WORKER_LOG /spark/logs
+ENV SPARK_WORKER_LOG /user/$HDFS_NAMENODE_USER/spark-logs
 ENV YARN_CONF_DIR $HADOOP_CONF_DIR
 
 COPY config/hive/*.xml $HIVE_HOME/conf/

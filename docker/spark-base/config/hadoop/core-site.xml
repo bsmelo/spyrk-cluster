@@ -6,8 +6,8 @@
             <value>hdfs://spark-master:9000</value>
         </property>
         <!-- Roteiro 2: usuario padrao para que seja possivel utilizar a interface web com as devidas permissoes -->
-        <!-- property>
+        <property>
             <name>hadoop.http.staticuser.user</name>
             <value>root</value>
-        </property -->
+        </property>
 </configuration>
