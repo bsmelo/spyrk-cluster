@@ -423,5 +423,9 @@ Ao se finalizar, faça `docker-compose down` para parar e excluir todos os conta
 
 _On roadmap:_
 - _Disponilizar Kafka (DONE!)_
+- Ajustar user (não usar root)
+- Padronizar parametrização (repassar ENV VARS)
+- Disponibilizar Hbase
 - Disponibilizar Sqoop
+- Disponibilizar Mahout
 - Disponibilizar Flume
