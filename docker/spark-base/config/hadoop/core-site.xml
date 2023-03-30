@@ -8,6 +8,6 @@
         <!-- Roteiro 2: usuario padrao para que seja possivel utilizar a interface web com as devidas permissoes -->
         <!-- property>
             <name>hadoop.http.staticuser.user</name>
-            <value>spark</value>
+            <value>root</value>
         </property -->
 </configuration>

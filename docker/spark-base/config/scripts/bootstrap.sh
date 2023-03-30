@@ -19,8 +19,12 @@ if [[ $HOSTNAME = spark-master ]]; then
     service mysql start
 
     # Criação de diretórios no ambiente distribuído do HDFS
-    hdfs dfs -mkdir /datasets
-    hdfs dfs -mkdir /datasets_processed
+    hdfs dfs -mkdir -p /user/$HDFS_NAMENODE_USER/datasets
+    hdfs dfs -mkdir -p /user/$HDFS_NAMENODE_USER/datasets_processed
+
+    # Roteiro 4
+    # hdfs dfs -mkdir -p /spark-logs
+    # start-history-server.sh
 
     # Configs de Zookeeper
     touch /var/lib/zookeeper/myid
@@ -35,7 +39,7 @@ if [[ $HOSTNAME = spark-master ]]; then
     echo "broker.id=0" >> /usr/kafka/config/server.properties
 
     # Configs de Hive, configurando o metastore, definindo senha, etc...
-    mysql -u root -Bse \
+    mysql -u $HDFS_NAMENODE_USER -Bse \
     "CREATE DATABASE metastore; \
     USE metastore; \
     SOURCE /usr/hive/scripts/metastore/upgrade/mysql/hive-schema-3.1.0.mysql.sql; \
